@@ -19,10 +19,10 @@ public class NotCollide : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-
         float x = Random.Range(-19, 19);
         float z = Random.Range(-19, 19);
 
+        if (other.tag != "Player" || other.tag != "Piso")
         transform.position = new Vector3(x, transform.position.y, z);
     }
 }

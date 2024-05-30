@@ -17,11 +17,11 @@ public class a : MonoBehaviour
     }
     public void OnTriggerEnter(Collider other)
     {
-        float x = Random.Range(-149, 150);
+        /*float x = Random.Range(-149, 150);
         float z = Random.Range(-149, 150);
 
         transform.position = new Vector3(x, 1, z);
-
+*/
         if (other.CompareTag("Player"))
         {
             this.gameObject.SetActive(false);
@@ -29,10 +29,10 @@ public class a : MonoBehaviour
     }
 
     public void OnTriggerStay(Collider other)
-    {
+    {/*
         float x = Random.Range(-49, 50);
         float z = Random.Range(-49, 50);
 
-        transform.position = new Vector3(x, 1, z);
+        transform.position = new Vector3(x, 1, z);*/
     }
 }
