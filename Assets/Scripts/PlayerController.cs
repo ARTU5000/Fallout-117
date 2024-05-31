@@ -12,11 +12,13 @@ public class PlayerController : MonoBehaviour
     public float movementSpeed;
     public Vector2 sensitivity;public float hor;
     Vector3 velocity;
+    public Animator anim;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        anim = GetComponentInChildren<Animator>();
         rb.constraints = RigidbodyConstraints.FreezeAll;
         Cursor.lockState = CursorLockMode.Locked;
         ground = true;
@@ -30,6 +32,7 @@ public class PlayerController : MonoBehaviour
 
         if (hor != 0 || ver != 0)
         {
+            anim.SetBool("moving", true);
             rb.constraints &= ~RigidbodyConstraints.FreezePositionX;
             rb.constraints &= ~RigidbodyConstraints.FreezePositionY;
             rb.constraints &= ~RigidbodyConstraints.FreezePositionZ; 
@@ -39,6 +42,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            anim.SetBool("moving", false);
             velocity = Vector3.zero;
             rb.constraints = RigidbodyConstraints.FreezeAll;
         }
