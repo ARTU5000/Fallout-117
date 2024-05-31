@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraCollision : MonoBehaviour
 {
     private float minDis = .5f;
-    private float MaxDis = 1;
+    private float MaxDis = 1.2f;
     private float suavidad = 10;
     private float dis;
 
@@ -28,7 +28,7 @@ public class CameraCollision : MonoBehaviour
         {
             if(MaxDis == 2)
             {
-                MaxDis = 1;
+                MaxDis = 1.2f;
             }
             else
             {

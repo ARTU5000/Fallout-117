@@ -10,6 +10,8 @@ public class cameraController : MonoBehaviour
     public Vector2 sensitivity;
     public new Transform camera;
     public GameObject tpcamera;
+    float minVAng = -70f;
+    float maxVAng = 70f;
 
     // Start is called before the first frame update
     void Start()
@@ -42,10 +44,12 @@ public class cameraController : MonoBehaviour
         if (ver != 0)
         {
             Vector3 rotation = camera.localEulerAngles;
-            rotation.x = (rotation.x - ver * sensitivity.y + 360) % 360;
-            if (rotation.x > 80 && rotation.x < 180) { rotation.x = 80; } else
-            if (rotation.x < 280 && rotation.x > 180) { rotation.x = 280; }
+            rotation.x = rotation.x - ver * sensitivity.y;
 
+            if (rotation.x > 180) rotation.x -= 360;
+            if (rotation.x < -180) rotation.x += 360;
+
+            rotation.x = Mathf.Clamp(rotation.x, minVAng, maxVAng);
             camera.localEulerAngles = rotation;
         }
     }
