@@ -4,18 +4,19 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private new Rigidbody rigidbody;
+    private Rigidbody rb;
 
     public bool ground;
     public bool move;
     private float jp ;
     public float movementSpeed;
-    public Vector2 sensitivity;
+    public Vector2 sensitivity;public float hor;
 
     // Start is called before the first frame update
     void Start()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
+        rb.constraints = RigidbodyConstraints.FreezeAll;
         Cursor.lockState = CursorLockMode.Locked;
         ground = true;
         jp = 8f;
@@ -23,27 +24,33 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateMovement()
     {
-        float hor = Input.GetAxisRaw("Horizontal");
+         hor = Input.GetAxisRaw("Horizontal");
         float ver = Input.GetAxisRaw("Vertical");
 
         Vector3 velocity = Vector3.zero;
 
         if (hor != 0 || ver != 0)
         {
+            
+            rb.constraints = ~RigidbodyConstraints.FreezePositionX|~RigidbodyConstraints.FreezePositionX|~RigidbodyConstraints.FreezePositionX;
             Vector3 direction = (transform.forward * ver + transform.right * hor).normalized;
 
             velocity = direction * movementSpeed;
         }
+        else
+        {
 
-        velocity.y = rigidbody.velocity.y;
-        rigidbody.velocity = velocity;
+        }
+
+        velocity.y = rb.velocity.y;
+        rb.velocity = velocity;
     }
     
     void jump()
     {
         if (ground == true && Input.GetButton("Jump"))
         {
-            rigidbody.velocity = new Vector3(rigidbody.velocity.x, jp,rigidbody.velocity.z);
+            rb.velocity = new Vector3(rb.velocity.x, jp,rb.velocity.z);
             ground = false;
         }
     }
