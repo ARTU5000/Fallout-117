@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     private float jp ;
     public float movementSpeed;
     public Vector2 sensitivity;public float hor;
+    Vector3 velocity;
 
     // Start is called before the first frame update
     void Start()
@@ -27,19 +28,19 @@ public class PlayerController : MonoBehaviour
          hor = Input.GetAxisRaw("Horizontal");
         float ver = Input.GetAxisRaw("Vertical");
 
-        Vector3 velocity = Vector3.zero;
-
         if (hor != 0 || ver != 0)
         {
-            
-            rb.constraints = ~RigidbodyConstraints.FreezePositionX|~RigidbodyConstraints.FreezePositionX|~RigidbodyConstraints.FreezePositionX;
+            rb.constraints &= ~RigidbodyConstraints.FreezePositionX;
+            rb.constraints &= ~RigidbodyConstraints.FreezePositionY;
+            rb.constraints &= ~RigidbodyConstraints.FreezePositionZ; 
             Vector3 direction = (transform.forward * ver + transform.right * hor).normalized;
 
             velocity = direction * movementSpeed;
         }
         else
         {
-
+            velocity = Vector3.zero;
+            rb.constraints = RigidbodyConstraints.FreezeAll;
         }
 
         velocity.y = rb.velocity.y;
