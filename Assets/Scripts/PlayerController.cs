@@ -19,8 +19,9 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
-        rb.constraints = RigidbodyConstraints.FreezeAll;
-        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Locked;  
+        rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+    
         ground = true;
         jp = 8f;
     }
@@ -34,8 +35,7 @@ public class PlayerController : MonoBehaviour
         {
             anim.SetBool("moving", true);
             rb.constraints &= ~RigidbodyConstraints.FreezePositionX;
-            rb.constraints &= ~RigidbodyConstraints.FreezePositionY;
-            rb.constraints &= ~RigidbodyConstraints.FreezePositionZ; 
+            rb.constraints &= ~RigidbodyConstraints.FreezePositionZ;
             Vector3 direction = (transform.forward * ver + transform.right * hor).normalized;
 
             velocity = direction * movementSpeed;
@@ -43,8 +43,8 @@ public class PlayerController : MonoBehaviour
         else
         {
             anim.SetBool("moving", false);
-            velocity = Vector3.zero;
-            rb.constraints = RigidbodyConstraints.FreezeAll;
+            velocity = Vector3.zero; 
+            rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
         }
 
         velocity.y = rb.velocity.y;
@@ -55,6 +55,8 @@ public class PlayerController : MonoBehaviour
     {
         if (ground == true && Input.GetButton("Jump"))
         {
+            rb.constraints &= ~RigidbodyConstraints.FreezePositionX;
+            rb.constraints &= ~RigidbodyConstraints.FreezePositionZ; 
             rb.velocity = new Vector3(rb.velocity.x, jp,rb.velocity.z);
             ground = false;
         }
