@@ -20,6 +20,7 @@ public class opendoor : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.tag == "Player")
         anim.SetBool("open", true);
     }
 
