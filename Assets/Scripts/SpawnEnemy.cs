@@ -20,7 +20,7 @@ public class SpawnEnemy : MonoBehaviour
         }
 
         active = false;
-        activationDistance = 20f;
+        activationDistance = 21f;
     }
 
     void Update()
