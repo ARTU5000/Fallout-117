@@ -21,6 +21,7 @@ public class SpawnEnemy : MonoBehaviour
 
         active = false;
         activationDistance = 21f;
+        enemy.SetActive(false);
     }
 
     void Update()
