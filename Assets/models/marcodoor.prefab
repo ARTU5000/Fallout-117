@@ -72,6 +72,14 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
+    - target: {fileID: -1935356804029805437, guid: a394c7d93cc37bc4d9dc857915274f37, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: -1177455879863648800, guid: a394c7d93cc37bc4d9dc857915274f37, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: -992238102200694341, guid: a394c7d93cc37bc4d9dc857915274f37, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -84,10 +92,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: marcodoor
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a394c7d93cc37bc4d9dc857915274f37, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1559560168332703148, guid: a394c7d93cc37bc4d9dc857915274f37, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 2017416415091308040, guid: a394c7d93cc37bc4d9dc857915274f37, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 2623438074134420092, guid: a394c7d93cc37bc4d9dc857915274f37, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 985f6683e99bbe145b588186410d02ba, type: 2}
+    - target: {fileID: 7335816240892044672, guid: a394c7d93cc37bc4d9dc857915274f37, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -164,8 +188,8 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
@@ -284,6 +308,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8391222552659086748, guid: cf41f97f4b121f74a938fcee0104d1f5, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4950862476780714177, guid: cf41f97f4b121f74a938fcee0104d1f5, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -4683669308469848369, guid: cf41f97f4b121f74a938fcee0104d1f5, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -296,10 +328,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: sinmarcodoor
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: cf41f97f4b121f74a938fcee0104d1f5, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4026016294780357894, guid: cf41f97f4b121f74a938fcee0104d1f5, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7281918025986783126, guid: cf41f97f4b121f74a938fcee0104d1f5, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 52996bb0e731cc6479811099f127cd73, type: 2}
+    - target: {fileID: 7368184300715620164, guid: cf41f97f4b121f74a938fcee0104d1f5, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8019499221449652171, guid: cf41f97f4b121f74a938fcee0104d1f5, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
