@@ -38,7 +38,6 @@ public class SpawnEnemy : MonoBehaviour
             else if (distanceToPlayer > activationDistance && active == true)
             {
                 enemy.SetActive(false);
-                enemy.transform.localPosition = Vector3.zero;
                 active = false;
             }
         }
