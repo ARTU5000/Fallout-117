@@ -12,7 +12,7 @@ public class SpawnEnemy : MonoBehaviour
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
+        player = GameObject.FindGameObjectWithTag("Player2B");
 
         if (player == null)
         {
@@ -20,7 +20,7 @@ public class SpawnEnemy : MonoBehaviour
         }
 
         active = false;
-        activationDistance = 21f;
+        activationDistance = 15f;
         enemy.SetActive(false);
     }
 
