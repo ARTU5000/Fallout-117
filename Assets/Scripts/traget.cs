@@ -24,12 +24,14 @@ public class traget : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        InvokeRepeating("SpawnTarget", spawn, spawn);
-        InvokeRepeating("players",.1f,.1f);
-        InvokeRepeating("ActivateTarget", 5f, 5f);
-        InvokeRepeating("Activate",3f,3f);
+        //InvokeRepeating("SpawnTarget", spawn, spawn);
+        //InvokeRepeating("players",.1f,.1f);
+        InvokeRepeating("ActivateTarget", 5f, 10f);
+        //InvokeRepeating("Activate",3f,3f);
         RandTime = Random.Range(10, 50);
-        Invoke("die", RandTime);
+        //Invoke("die", RandTime);
+        GameObject[] targetArray = GameObject.FindGameObjectsWithTag("Target");
+        targets = new List<GameObject>(targetArray); 
     }
 
     // Update is called once per frame
@@ -107,7 +109,11 @@ public class traget : MonoBehaviour
         foreach (GameObject target in targets)
         {
             if (target == null) continue;
-            target.SetActive(true);
+            if (!target.activeSelf)
+            {
+                target.SetActive(true);
+                break;
+            }
         }
     }
 
