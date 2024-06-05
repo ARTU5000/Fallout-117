@@ -8,6 +8,7 @@ TagManager:
   - Target
   - StaticObject
   - Player2B
+  - Rest
   layers:
   - Default
   - TransparentFX
