@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2540095418379931896}
   - component: {fileID: 6712442832245743937}
   - component: {fileID: 5086429362179422551}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TARGET ENERGY
   m_TagString: Target
   m_Icon: {fileID: 0}
