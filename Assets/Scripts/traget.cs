@@ -24,12 +24,8 @@ public class traget : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //InvokeRepeating("SpawnTarget", spawn, spawn);
-        //InvokeRepeating("players",.1f,.1f);
         InvokeRepeating("ActivateTarget", 5f, 10f);
-        //InvokeRepeating("Activate",3f,3f);
         RandTime = Random.Range(10, 50);
-        //Invoke("die", RandTime);
         GameObject[] targetArray = GameObject.FindGameObjectsWithTag("Target");
         targets = new List<GameObject>(targetArray); 
     }
@@ -54,17 +50,6 @@ public class traget : MonoBehaviour
         playerA.Clear();
         playerA = player.FindAll(go => go.activeInHierarchy);
         RandPlayer = Random.Range(0, playerA.Count);
-    }
-
-    void die()
-    {
-        if (player[RandPlayer].activeSelf)
-        {
-            clone = player[RandPlayer].GetComponent<Animator>();
-            clone.SetBool("morido", true);
-            RandTime = Random.Range(10, 50);
-            Invoke("die", RandTime);
-        }
     }
 
     int Activetargets()
@@ -92,17 +77,6 @@ public class traget : MonoBehaviour
         return TotalTargets;
     }
 
-    void Activate()
-    {
-        foreach (GameObject a in player)
-        {
-            if (!a.activeSelf)
-            {
-                a.SetActive(true);
-                break;
-            }
-        }
-    }
 
     private void ActivateTarget()
     {
@@ -115,40 +89,5 @@ public class traget : MonoBehaviour
                 break;
             }
         }
-    }
-
-    private void SpawnTarget()
-    {
-        if (targets.Count < 300)
-        {
-            GameObject newTarget = Instantiate(targetPrefabs, transform.position, Quaternion.identity);
-
-            float x = Random.Range(-149, 150);
-            float z = Random.Range(-149, 150);
-
-            newTarget.transform.position = new Vector3(x, 2, z);
-            targets.Add(newTarget); 
-        }
-    }
-    private void players()
-    {
-        GameObject randomSpawnPoint = GetRandomSpawnPoint();
-        if (player.Count < 300)
-        {
-            GameObject newplayer = Instantiate(playerPrefabs, randomSpawnPoint.transform.localPosition, Quaternion.identity);
-        
-            float x = Random.Range(-149, 150);
-            float z = Random.Range(-149, 150);
-
-            newplayer.transform.position = new Vector3(x, 2, z);
-            player.Add(newplayer); 
-        }
-    }
-    
-    GameObject GetRandomSpawnPoint()
-    {
-        int randomIndex = Random.Range(0, spawnPoints.Length);
-        
-        return spawnPoints[randomIndex];
     }
 }

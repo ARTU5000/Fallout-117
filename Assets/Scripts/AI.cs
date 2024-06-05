@@ -7,41 +7,32 @@ public class AI : MonoBehaviour
 {
     
     public NavMeshAgent agent;
+    public List<GameObject> targetsR = new List<GameObject>(); 
+    public List<GameObject> targetsW = new List<GameObject>(); 
     public List<GameObject> targets = new List<GameObject>(); 
     public Animator clone;
     public GameObject closestTarget;
     public GameObject courrentTarget;
-    public GameObject deathbeacon;
-
+    public bool isWorking;
+   [SerializeField] private int count;
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        clone.SetBool("alto", true);
+        clone = GetComponentInChildren<Animator>();
+        clone.SetBool("moving", false);
         Invoke("Stop", 5);
         closestTarget = null;
+        isWorking = true;
+        count = 0;
     }
 
     void Update()
     {
-        if (clone.GetBool("morido"))
-        {
-            deathbeacon.SetActive(true);
-        }
-        else
-        {
-            deathbeacon.SetActive(false);
-        }
-
-        if (clone.GetBool("morido") && !clone.GetCurrentAnimatorStateInfo(0).IsName("Dying Backwards"))
-        {
-            deathbeacon.SetActive(true);
-            Invoke("Death", 5);
-        }
-
-        if (!clone.GetBool("alto") && closestTarget == null && !clone.GetBool("morido"))
+        if (!clone.GetBool("moving") && closestTarget == null)
         {
             FindTargets();
             closestTarget = GetRandomTarget();
+            clone.SetBool("moving", true);
         }
 
         if (closestTarget != null)
@@ -52,8 +43,8 @@ public class AI : MonoBehaviour
             {
                 closestTarget = this.gameObject;
                 agent.isStopped = true;
-                clone.SetBool("alto", true);
-                Invoke("Stop", 3);
+                //clone.SetBool("moving", false);
+                //Invoke("Stop", 5);
             }
             else
             {
@@ -64,8 +55,17 @@ public class AI : MonoBehaviour
 
     void Stop()
     {
-        clone.SetBool("alto", false);
+        clone.SetBool("moving", false);
         closestTarget = null;
+        if (isWorking && agent.isStopped)
+        {
+            clone.SetBool("work", true);
+            Invoke("StopW", 5);
+        }
+    }
+    void StopW()
+    {
+        clone.SetBool("work", false);
     }
 
     GameObject GetClosestTarget()
@@ -111,14 +111,43 @@ public class AI : MonoBehaviour
 
     void FindTargets()
     {
-        GameObject[] targetArray = GameObject.FindGameObjectsWithTag("Target");
-        targets = new List<GameObject>(targetArray); 
+        GameObject[] targetRest = GameObject.FindGameObjectsWithTag("Rest");
+        GameObject[] targetWorks = GameObject.FindGameObjectsWithTag("Target");
+        targetsR = new List<GameObject>(targetRest); 
+        targetsW = new List<GameObject>(targetWorks);
+        if (isWorking && count < 5)
+        {
+            targets = targetsW;
+            count++;
+        }
+        else if(count>= 5 && isWorking)
+        {
+            count = 1;
+            isWorking = false;
+            targets = targetsR;
+        }
+        else if(!isWorking && count < 2)
+        {
+            targets = targetsR;
+            count++;
+        }
+        else if (count >= 2 && !isWorking)
+        {
+            count = 1;
+            isWorking = true;
+            targets = targetsW;
+        }
+
+
     }
 
-    void Death()
+    private void OnTriggerEnter(Collider other)
     {
-        this.gameObject.SetActive(false);
+        if (other == closestTarget)
+        {
+            clone.SetBool("moving", false);
+            Stop();
+        }
     }
-
 }
 
