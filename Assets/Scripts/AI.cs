@@ -41,7 +41,7 @@ public class AI : MonoBehaviour
         if (!clone.GetBool("alto") && closestTarget == null && !clone.GetBool("morido"))
         {
             FindTargets();
-            closestTarget = GetClosestTarget();
+            closestTarget = GetRandomTarget();
         }
 
         if (closestTarget != null)
@@ -87,6 +87,26 @@ public class AI : MonoBehaviour
         }
 
         return ClosestTarget;
+    }
+
+    GameObject GetRandomTarget()
+    {
+        List<GameObject> Targets = new List<GameObject>();
+        foreach (GameObject target in targets)
+        {
+            if (target != null)
+            {
+                Targets.Add(target);
+            }
+        }
+
+        if (Targets.Count == 0)
+        {
+            return null;
+        }
+
+        int rnd = Random.Range(0, Targets.Count);
+        return Targets[rnd];
     }
 
     void FindTargets()
