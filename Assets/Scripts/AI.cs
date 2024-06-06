@@ -5,149 +5,126 @@ using UnityEngine.AI;
 
 public class AI : MonoBehaviour
 {
-    
     public NavMeshAgent agent;
-    public List<GameObject> targetsR = new List<GameObject>(); 
-    public List<GameObject> targetsW = new List<GameObject>(); 
-    public List<GameObject> targets = new List<GameObject>(); 
     public Animator clone;
-    public GameObject closestTarget;
-    public GameObject courrentTarget;
-    public bool isWorking;
-   [SerializeField] private int count;
+    private List<Transform> targets = new List<Transform>();
+    private List<Transform> rest = new List<Transform>();
+
+    private Queue<Transform> targetQueue = new Queue<Transform>();
+    private Queue<Transform> restQueue = new Queue<Transform>();
+    private Transform currentTarget;
+    private bool isWorking;
+    private bool isMoving;
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         clone = GetComponentInChildren<Animator>();
-        clone.SetBool("moving", false);
-        Invoke("Stop", 5);
-        closestTarget = null;
-        isWorking = true;
-        count = 0;
+        FindTargets();
+
+        FillQueues();
+        MoveToNextTarget();
     }
 
     void Update()
     {
-        if (!clone.GetBool("moving") && closestTarget == null)
+        if (isMoving && agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
         {
-            FindTargets();
-            closestTarget = GetRandomTarget();
-            clone.SetBool("moving", true);
-        }
+            isMoving = false;
+            clone.SetBool("moving", false);
 
-        if (closestTarget != null)
-        {
-            agent.SetDestination(closestTarget.transform.position);
-
-            if (!closestTarget.activeSelf)
+            if (isWorking && currentTarget != null && currentTarget.gameObject.layer == LayerMask.NameToLayer("Target"))
             {
-                closestTarget = this.gameObject;
-                agent.isStopped = true;
-                //clone.SetBool("moving", false);
-                //Invoke("Stop", 5);
+                clone.SetBool("work", true);
             }
-            else
-            {
-                agent.isStopped = false;
-            }
+
+            Invoke(nameof(MoveToNextTarget), 5f); // Espera 1 segundo antes de moverse al siguiente objetivo
         }
-    }
-
-    void Stop()
-    {
-        clone.SetBool("moving", false);
-        closestTarget = null;
-        if (isWorking && agent.isStopped)
-        {
-            clone.SetBool("work", true);
-            Invoke("StopW", 5);
-        }
-    }
-    void StopW()
-    {
-        clone.SetBool("work", false);
-    }
-
-    GameObject GetClosestTarget()
-    {
-        GameObject ClosestTarget = null;
-        float closestDistance = Mathf.Infinity;
-
-        foreach (GameObject target in targets)
-        {
-            if (target == null) continue;
-
-            float dist = Vector3.Distance(agent.transform.position, target.transform.position);
-
-            if (dist < closestDistance)
-            {
-                closestDistance = dist;
-                ClosestTarget = target;
-            }
-        }
-
-        return ClosestTarget;
-    }
-
-    GameObject GetRandomTarget()
-    {
-        List<GameObject> Targets = new List<GameObject>();
-        foreach (GameObject target in targets)
-        {
-            if (target != null)
-            {
-                Targets.Add(target);
-            }
-        }
-
-        if (Targets.Count == 0)
-        {
-            return null;
-        }
-
-        int rnd = Random.Range(0, Targets.Count);
-        return Targets[rnd];
     }
 
     void FindTargets()
     {
-        GameObject[] targetRest = GameObject.FindGameObjectsWithTag("Rest");
-        GameObject[] targetWorks = GameObject.FindGameObjectsWithTag("Target");
-        targetsR = new List<GameObject>(targetRest); 
-        targetsW = new List<GameObject>(targetWorks);
-        if (isWorking && count < 5)
+        GameObject[] targetObjects = GameObject.FindGameObjectsWithTag("Target");
+
+        foreach (GameObject obj in targetObjects)
         {
-            targets = targetsW;
-            count++;
-        }
-        else if(count>= 5 && isWorking)
-        {
-            count = 1;
-            isWorking = false;
-            targets = targetsR;
-        }
-        else if(!isWorking && count < 2)
-        {
-            targets = targetsR;
-            count++;
-        }
-        else if (count >= 2 && !isWorking)
-        {
-            count = 1;
-            isWorking = true;
-            targets = targetsW;
+            if (obj.layer == LayerMask.NameToLayer("Target"))
+            {
+                targets.Add(obj.transform);
+            }
+            else if (obj.layer == LayerMask.NameToLayer("Rest"))
+            {
+                rest.Add(obj.transform);
+            }
         }
 
-
+        Debug.Log("Found " + targets.Count + " targets and " + rest.Count + " rest points.");
     }
 
-    private void OnTriggerEnter(Collider other)
+    void MoveToNextTarget()
     {
-        if (other == closestTarget)
+        if (targetQueue.Count == 0 && restQueue.Count == 0)
         {
-            clone.SetBool("moving", false);
-            Stop();
+            FillQueues();
+        }
+
+        if (targetQueue.Count > 0)
+        {
+            currentTarget = targetQueue.Dequeue();
+            isWorking = true;
+        }
+        else if (restQueue.Count > 0)
+        {
+            currentTarget = restQueue.Dequeue();
+            isWorking = false;
+        }
+
+        if (currentTarget != null)
+        {
+            Debug.Log("Moving to: " + currentTarget.position);
+            agent.SetDestination(currentTarget.position);
+            clone.SetBool("moving", true);
+            clone.SetBool("work", false);
+            isMoving = true;
+        }
+        else
+        {
+            Debug.Log("No current target to move to.");
+        }
+    }
+
+    void FillQueues()
+    {
+        targetQueue.Clear();
+        restQueue.Clear();
+
+        List<Transform> shuffledTargets = new List<Transform>(targets);
+        List<Transform> shuffledRests = new List<Transform>(rest);
+
+        Shuffle(shuffledTargets);
+        Shuffle(shuffledRests);
+
+        for (int i = 0; i < 5 && i < shuffledTargets.Count; i++)
+        {
+            targetQueue.Enqueue(shuffledTargets[i]);
+        }
+
+        for (int i = 0; i < 2 && i < shuffledRests.Count; i++)
+        {
+            restQueue.Enqueue(shuffledRests[i]);
+        }
+
+        Debug.Log("Filled queues with " + targetQueue.Count + " targets and " + restQueue.Count + " rest points.");
+    }
+
+    void Shuffle(List<Transform> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            Transform temp = list[i];
+            int randomIndex = Random.Range(i, list.Count);
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
         }
     }
 }
-

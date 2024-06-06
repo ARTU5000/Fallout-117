@@ -70,11 +70,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5658541626366242834, guid: d0f45c26d91037041895b5f9833365dc, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5658541626366242834, guid: d0f45c26d91037041895b5f9833365dc, type: 3}
       propertyPath: m_TagString
-      value: Rest
+      value: Target
       objectReference: {fileID: 0}
     - target: {fileID: 6669978235741019668, guid: d0f45c26d91037041895b5f9833365dc, type: 3}
       propertyPath: m_Materials.Array.data[0]

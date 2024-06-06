@@ -16,6 +16,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: TARGET FOOD
       objectReference: {fileID: 0}
+    - target: {fileID: 1283727380514869620, guid: 40fd3580b8091974bbcb18edb156018d, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1283727380514869620, guid: 40fd3580b8091974bbcb18edb156018d, type: 3}
+      propertyPath: m_TagString
+      value: Target
+      objectReference: {fileID: 0}
     - target: {fileID: 6324997553953070938, guid: 40fd3580b8091974bbcb18edb156018d, type: 3}
       propertyPath: m_Color.g
       value: 0.44479144
