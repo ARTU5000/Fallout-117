@@ -19,7 +19,7 @@ public class a : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            this.gameObject.SetActive(false);
+            //this.gameObject.SetActive(false);
         }
     }
 

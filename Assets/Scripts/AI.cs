@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEditor; 
 
 public class AI : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class AI : MonoBehaviour
     private Transform currentTarget;
     private bool isWorking;
     private bool isMoving;
+    
+    public GameObject[] prefabs;
 
     void Start()
     {
@@ -36,9 +39,17 @@ public class AI : MonoBehaviour
             if (isWorking && currentTarget != null && currentTarget.gameObject.layer == LayerMask.NameToLayer("Target"))
             {
                 clone.SetBool("work", true);
+
+                for (int i = 0; i < prefabs.Length; i++)
+                {
+                    if (IsPrefab(currentTarget.gameObject, prefabs[i]))
+                    {
+                        break;
+                    }
+                }
             }
 
-            Invoke(nameof(MoveToNextTarget), 5f); // Espera 1 segundo antes de moverse al siguiente objetivo
+            Invoke(nameof(MoveToNextTarget), 5f);
         }
     }
 
@@ -57,8 +68,6 @@ public class AI : MonoBehaviour
                 rest.Add(obj.transform);
             }
         }
-
-        Debug.Log("Found " + targets.Count + " targets and " + rest.Count + " rest points.");
     }
 
     void MoveToNextTarget()
@@ -81,15 +90,10 @@ public class AI : MonoBehaviour
 
         if (currentTarget != null)
         {
-            Debug.Log("Moving to: " + currentTarget.position);
             agent.SetDestination(currentTarget.position);
             clone.SetBool("moving", true);
             clone.SetBool("work", false);
             isMoving = true;
-        }
-        else
-        {
-            Debug.Log("No current target to move to.");
         }
     }
 
@@ -113,8 +117,6 @@ public class AI : MonoBehaviour
         {
             restQueue.Enqueue(shuffledRests[i]);
         }
-
-        Debug.Log("Filled queues with " + targetQueue.Count + " targets and " + restQueue.Count + " rest points.");
     }
 
     void Shuffle(List<Transform> list)
@@ -126,5 +128,21 @@ public class AI : MonoBehaviour
             list[i] = list[randomIndex];
             list[randomIndex] = temp;
         }
+    }
+
+    bool IsPrefab(GameObject targetObject, GameObject prefab)
+    {
+        var targetPrefabType = PrefabUtility.GetPrefabAssetType(targetObject);
+        var prefabType = PrefabUtility.GetPrefabAssetType(prefab);
+
+        if (targetPrefabType == PrefabAssetType.Regular && prefabType == PrefabAssetType.Regular)
+        {
+            var targetPrefabParent = PrefabUtility.GetCorrespondingObjectFromSource(targetObject);
+            var prefabParent = PrefabUtility.GetCorrespondingObjectFromSource(prefab);
+
+            return targetPrefabParent == prefabParent;
+        }
+
+        return false;
     }
 }
