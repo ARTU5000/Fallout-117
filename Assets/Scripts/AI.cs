@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEditor; 
+using UnityEngine.UI;
+using TMPro;
+using System.IO;
+using System;
 
 public class AI : MonoBehaviour
 {
@@ -13,14 +17,20 @@ public class AI : MonoBehaviour
 
     private Queue<Transform> targetQueue = new Queue<Transform>();
     private Queue<Transform> restQueue = new Queue<Transform>();
-    private Transform currentTarget;
+    [SerializeField]private Transform currentTarget;
     private bool isWorking;
     private bool isMoving;
     
     public GameObject[] prefabs;
+    public GameObject[] prefabsRest;
+    [SerializeField]int[] resource = new int[3]; //0 = energia, 1 = agua, 2 = comida
+    public TextMeshProUGUI Pointer;
+    SaveResources SaveP;
+    string rute;
 
     void Start()
     {
+        Load();
         agent = GetComponent<NavMeshAgent>();
         clone = GetComponentInChildren<Animator>();
         FindTargets();
@@ -44,6 +54,28 @@ public class AI : MonoBehaviour
                 {
                     if (IsPrefab(currentTarget.gameObject, prefabs[i]))
                     {
+                        if (i < 3)
+                        {
+                            Load();
+                            resource[i] ++;
+                            Save();
+                        }
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < prefabsRest.Length; i++)
+                {
+                    if (IsPrefab(currentTarget.gameObject, prefabsRest[i]))
+                    {
+                        if (i < 3)
+                        {
+                            Load();
+                            resource[i] ++;
+                            Save();
+                        }
                         break;
                     }
                 }
@@ -51,6 +83,8 @@ public class AI : MonoBehaviour
 
             Invoke(nameof(MoveToNextTarget), 5f);
         }
+
+        Pointer.text = "Energia: " + resource[0].ToString() + "\n Agua: " + resource[1].ToString() + "\n Comida: " + resource[2].ToString();
     }
 
     void FindTargets()
@@ -124,7 +158,7 @@ public class AI : MonoBehaviour
         for (int i = 0; i < list.Count; i++)
         {
             Transform temp = list[i];
-            int randomIndex = Random.Range(i, list.Count);
+            int randomIndex = UnityEngine.Random.Range(i, list.Count);
             list[i] = list[randomIndex];
             list[randomIndex] = temp;
         }
@@ -132,17 +166,37 @@ public class AI : MonoBehaviour
 
     bool IsPrefab(GameObject targetObject, GameObject prefab)
     {
-        var targetPrefabType = PrefabUtility.GetPrefabAssetType(targetObject);
-        var prefabType = PrefabUtility.GetPrefabAssetType(prefab);
+        return targetObject.name == prefab.name;
+    }
 
-        if (targetPrefabType == PrefabAssetType.Regular && prefabType == PrefabAssetType.Regular)
+    public void Save()
+    {
+        rute = Application.streamingAssetsPath + "/Resources.json";
+        SaveP = new SaveResources(resource[0], resource[1], resource[2]);
+        string json = JsonUtility.ToJson(SaveP, true);
+        System.IO.File.WriteAllText(rute, json);
+    }
+
+    public void Load()
+    {
+        string filePath = Path.Combine(Application.streamingAssetsPath, "Resources.json");
+
+        if (File.Exists(filePath))
         {
-            var targetPrefabParent = PrefabUtility.GetCorrespondingObjectFromSource(targetObject);
-            var prefabParent = PrefabUtility.GetCorrespondingObjectFromSource(prefab);
+            rute = Application.streamingAssetsPath + "/Resources.json";
+            string json = System.IO.File.ReadAllText(rute);
+            SaveP = JsonUtility.FromJson<SaveResources>(json);
 
-            return targetPrefabParent == prefabParent;
+            resource[0] = (SaveP.NRG);
+            resource[1] = (SaveP.WTR);
+            resource[2] = (SaveP.FUD);
         }
-
-        return false;
+        else
+        {
+            resource[0] = 0;
+            resource[1] = 0;
+            resource[2] = 0;
+            Save();
+        }
     }
 }
