@@ -21,6 +21,9 @@ public class AI : MonoBehaviour
     private bool isWorking;
     private bool isMoving;
     
+    private float targetTimeout = 60f;
+    private float targetTimer;
+
     public GameObject[] prefabs;
     public GameObject[] prefabsRest;
     [SerializeField]int[] resource = new int[3]; //0 = energia, 1 = agua, 2 = comida
@@ -41,47 +44,57 @@ public class AI : MonoBehaviour
 
     void Update()
     {
-        if (isMoving && agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
+        if (isMoving)
         {
-            isMoving = false;
-            clone.SetBool("moving", false);
+            targetTimer += Time.deltaTime;
 
-            if (isWorking && currentTarget != null && currentTarget.gameObject.layer == LayerMask.NameToLayer("Target"))
+            if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
             {
-                clone.SetBool("work", true);
+                isMoving = false;
+                clone.SetBool("moving", false);
 
-                for (int i = 0; i < prefabs.Length; i++)
+                if (isWorking && currentTarget != null && currentTarget.gameObject.layer == LayerMask.NameToLayer("Target"))
                 {
-                    if (IsPrefab(currentTarget.gameObject, prefabs[i]))
+                    clone.SetBool("work", true);
+
+                    for (int i = 0; i < prefabs.Length; i++)
                     {
-                        if (i < 3)
+                        if (IsPrefab(currentTarget.gameObject, prefabs[i]))
                         {
-                            Load();
-                            resource[i] ++;
-                            Save();
+                            if (i < 3)
+                            {
+                                Load();
+                                resource[i] ++;
+                                Save();
+                            }
+                            break;
                         }
-                        break;
                     }
                 }
-            }
-            else
-            {
-                for (int i = 0; i < prefabsRest.Length; i++)
+                else
                 {
-                    if (IsPrefab(currentTarget.gameObject, prefabsRest[i]))
+                    for (int i = 0; i < prefabsRest.Length; i++)
                     {
-                        if (i < 3)
+                        if (IsPrefab(currentTarget.gameObject, prefabsRest[i]))
                         {
-                            Load();
-                            resource[i] ++;
-                            Save();
+                            if (i < 3)
+                            {
+                                Load();
+                                resource[i] --;
+                                Save();
+                            }
+                            break;
                         }
-                        break;
                     }
                 }
-            }
 
-            Invoke(nameof(MoveToNextTarget), 5f);
+                Invoke(nameof(MoveToNextTarget), 5f);
+            }
+            else if (targetTimer >= targetTimeout)
+            {
+                Debug.Log("Target timeout reached, moving to next target.");
+                MoveToNextTarget();
+            }
         }
 
         Pointer.text = "Energia: " + resource[0].ToString() + "\n Agua: " + resource[1].ToString() + "\n Comida: " + resource[2].ToString();
@@ -128,6 +141,11 @@ public class AI : MonoBehaviour
             clone.SetBool("moving", true);
             clone.SetBool("work", false);
             isMoving = true;
+            targetTimer = 0f; // Reset the timer when a new target is set
+        }
+        else
+        {
+            Debug.Log("No current target to move to.");
         }
     }
 

@@ -131,3 +131,19 @@ public class NetworkManager : MonoBehaviour
         }
     }
 }
+[System.Serializable]
+public class VaultDweller
+{
+    public int id;
+    public string name;
+    public string gender;
+    public int life;
+    public int level;
+    public int strength;
+    public int perception;
+    public int endurance;
+    public int charisma;
+    public int inteligence;
+    public int agility;
+    public int luck;
+}
