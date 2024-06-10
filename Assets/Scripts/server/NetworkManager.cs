@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
 using static System.Net.WebRequestMethods;
@@ -8,41 +10,75 @@ public class NetworkManager : MonoBehaviour
 {
     public string ip = "http://172.100.4.82";
     public string port = "3000";
+    [SerializeField] int[] resource = new int[3]; //0 = energia, 1 = agua, 2 = comida
+    public TextMeshProUGUI Pointer;
+    private string rute;
+    private SaveResources SaveP;
+
+    private float minuteTimer = 0f;
+    private float secondTimer = 0f;
+    private const float minuteInterval = 60f;
+    private const float secondInterval = 20f;
+
+    
+    public void Save()
+    {
+        rute = Application.streamingAssetsPath + "/Resources.json";
+        SaveP = new SaveResources(resource[0], resource[1], resource[2]);
+        string json = JsonUtility.ToJson(SaveP, true);
+        System.IO.File.WriteAllText(rute, json);
+    }
+
+    public void Load()
+    {
+        string filePath = Path.Combine(Application.streamingAssetsPath, "Resources.json");
+
+        if (System.IO.File.Exists(filePath))
+        {
+            rute = Application.streamingAssetsPath + "/Resources.json";
+            string json = System.IO.File.ReadAllText(rute);
+            SaveP = JsonUtility.FromJson<SaveResources>(json);
+
+            resource[0] = SaveP.NRG;
+            resource[1] = SaveP.WTR;
+            resource[2] = SaveP.FUD;
+        }
+        else
+        {
+            resource[0] = 0;
+            resource[1] = 0;
+            resource[2] = 0;
+            Save();
+        }
+    }
     void Start()
     {
         // A correct website page.
         StartCoroutine(GetRequest(ip + ":" + port));
-
+        /*
         // A non-existing page.
         StartCoroutine(GetRequest("https://error.html"));
 
 
         StartCoroutine(CreateDweller());
     
-        StartCoroutine(CreateDweller());
+        StartCoroutine(CreateDweller());*/
         StartCoroutine(ManageDweller());
+        //GetDweller();
     }
     
     IEnumerator ManageDweller()
     {
         int dwellerId = 1; // ID del dweller que quieres obtener y actualizar
         yield return StartCoroutine(GetDweller(dwellerId));
-    
+
         // Suponiendo que tienes un VaultDweller object
         VaultDweller dweller = new VaultDweller
         {
             id = dwellerId,
-            name = "El Ivan",
-            gender = "Masculino",
-            life = 2,
-            level = 10,
-            strength = 2,
-            perception = 6,
-            endurance = 3,
-            charisma = 8,
-            inteligence = 10,
-            agility = 5,
-            luck = 5
+            energia = 4,
+            agua = 5,
+            comida = 6
         };
     
         yield return StartCoroutine(UpdateDweller(dweller));
@@ -89,14 +125,14 @@ public class NetworkManager : MonoBehaviour
                     Debug.Log("Form upload complete!");
                 }
             }
-        }
-        IEnumerator GetDweller(int dwellerId)
+    }
+    IEnumerator GetDweller(int dwellerId)
     {
         string uri = ip + ":" + port + "/api/vaultdweller/getDweller";
         using (UnityWebRequest webRequest = UnityWebRequest.Post(uri, "{\"id\": " + dwellerId + "}", "application/json"))
         {
             yield return webRequest.SendWebRequest();
-    
+
             if (webRequest.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogError("Error: " + webRequest.error);
@@ -112,7 +148,7 @@ public class NetworkManager : MonoBehaviour
     }
     IEnumerator UpdateDweller(VaultDweller dweller)
     {
-        string uri = ip + ":" + port + "/api/vaultdweller/update";
+        string uri = ip + ":" + port + "/api/vaultdweller/updateDatos";
         string jsonData = JsonUtility.ToJson(dweller);
     
         using (UnityWebRequest webRequest = UnityWebRequest.Put(uri, jsonData))
@@ -135,15 +171,7 @@ public class NetworkManager : MonoBehaviour
 public class VaultDweller
 {
     public int id;
-    public string name;
-    public string gender;
-    public int life;
-    public int level;
-    public int strength;
-    public int perception;
-    public int endurance;
-    public int charisma;
-    public int inteligence;
-    public int agility;
-    public int luck;
+    public int energia;
+    public int agua;
+    public int comida;
 }

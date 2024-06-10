@@ -80,7 +80,10 @@ public class AI : MonoBehaviour
                             if (i < 3)
                             {
                                 Load();
-                                resource[i] --;
+                                int randomIndex = UnityEngine.Random.Range(0, resource.Length);
+                                resource[randomIndex]--;
+                                randomIndex = UnityEngine.Random.Range(0, resource.Length);
+                                resource[randomIndex]--;
                                 Save();
                             }
                             break;
@@ -97,7 +100,8 @@ public class AI : MonoBehaviour
             }
         }
 
-        Pointer.text = "Energia: " + resource[0].ToString() + "\n Agua: " + resource[1].ToString() + "\n Comida: " + resource[2].ToString();
+        Load();
+        Pointer.text = "Energia: " + resource[0].ToString() + "\n\n\n Agua: " + resource[1].ToString() + "\n\n\n Comida: " + resource[2].ToString();
     }
 
     void FindTargets()
