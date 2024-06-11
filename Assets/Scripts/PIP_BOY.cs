@@ -8,11 +8,16 @@ public class PIP_BOY : MonoBehaviour
     public GameObject items;
     public GameObject map;
     public GameObject online;
+    public GameObject vaultboy;
+    private PlayerController PC;
+    private cameraController CC;
 
     bool onOff;
     // Start is called before the first frame update
     void Start()
     {
+        PC = GetComponent<PlayerController>();
+        CC = GetComponent<cameraController>();
         onOff = false;
         pipboy.SetActive(onOff);
     }
@@ -22,12 +27,18 @@ public class PIP_BOY : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.P)) 
         {
+            vaultboy.SetActive(true);
+            items.SetActive(false);
+            map.SetActive(false);
+            online.SetActive(false);
             onOff = !onOff;
         }
         pipboy.SetActive(onOff);
 
         if (onOff)
         {
+            PC.enabled = false;
+            CC.enabled = false;
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
@@ -35,23 +46,28 @@ public class PIP_BOY : MonoBehaviour
         {
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
+            PC.enabled = true;
+            CC.enabled = true;
         }
     }
 
     public void Items()
     {
+        vaultboy.SetActive(false);
         items.SetActive(true);
         map.SetActive(false);
         online.SetActive(false);
     }
     public void Map()
     {
+        vaultboy.SetActive(false);
         items.SetActive(false);
         map.SetActive(true);
         online.SetActive(false);
     }
     public void Online()
     {
+        vaultboy.SetActive(false);
         items.SetActive(false);
         map.SetActive(false);
         online.SetActive(true);
