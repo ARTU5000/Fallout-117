@@ -25,6 +25,17 @@ public class PIP_BOY : MonoBehaviour
             onOff = !onOff;
         }
         pipboy.SetActive(onOff);
+
+        if (onOff)
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
     }
 
     public void Items()
