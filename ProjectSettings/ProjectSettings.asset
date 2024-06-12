@@ -764,8 +764,8 @@ PlayerSettings:
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: My project (7)
-  metroPackageVersion: 
+  metroPackageName: Myproject7
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -773,7 +773,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: My project (7)
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: My project (7)
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
