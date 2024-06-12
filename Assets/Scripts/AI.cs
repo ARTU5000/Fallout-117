@@ -21,7 +21,7 @@ public class AI : MonoBehaviour
     private bool isWorking;
     private bool isMoving;
     
-    private float targetTimeout = 60f;
+    private float targetTimeout = 30f;
     private float targetTimer;
 
     public GameObject[] prefabs;
@@ -95,7 +95,6 @@ public class AI : MonoBehaviour
             }
             else if (targetTimer >= targetTimeout)
             {
-                Debug.Log("Target timeout reached, moving to next target.");
                 MoveToNextTarget();
             }
         }
@@ -146,10 +145,6 @@ public class AI : MonoBehaviour
             clone.SetBool("work", false);
             isMoving = true;
             targetTimer = 0f; // Reset the timer when a new target is set
-        }
-        else
-        {
-            Debug.Log("No current target to move to.");
         }
     }
 

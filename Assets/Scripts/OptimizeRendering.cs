@@ -4,18 +4,27 @@ using UnityEngine;
 
 public class OptimizeRendering : MonoBehaviour
 {
-    public Camera mainCamera;
+    public Camera[] cameras;
 
     void Start()
     {
-        if (mainCamera == null)
+        cameras = FindObjectsOfType<Camera>();
+        
+        if (cameras == null || cameras.Length == 0)
         {
-            mainCamera = Camera.main;
+            Debug.LogError("No cameras assigned!");
+            return;
         }
 
-        if (mainCamera != null)
+        foreach (var cam in cameras)
         {
-            mainCamera.useOcclusionCulling = true;
+            if (cam == null)
+            {
+                Debug.LogWarning("A camera in the array is null. Skipping...");
+                continue;
+            }
+
+            cam.useOcclusionCulling = true;
         }
     }
 }
