@@ -11,7 +11,13 @@ public class NetworkManager : MonoBehaviour
     public string ip = "http://172.100.4.82";
     public string port = "3000";
     [SerializeField] int[] resource = new int[3]; //0 = energia, 1 = agua, 2 = comida
-    public TextMeshProUGUI Pointer;
+    [SerializeField] int[] resourceOnline = new int[3];
+
+
+    public GameObject[] resourceImage = new GameObject[3];
+    int index;
+
+    //public TextMeshProUGUI Pointer;
     private string rute;
     private SaveResources SaveP;
 
@@ -53,6 +59,7 @@ public class NetworkManager : MonoBehaviour
     }
     void Start()
     {
+        index = 0;
         // A correct website page.
         StartCoroutine(GetRequest(ip + ":" + port));
         /*
@@ -75,7 +82,6 @@ public class NetworkManager : MonoBehaviour
         // Suponiendo que tienes un VaultDweller object
         VaultDweller dweller = new VaultDweller
         {
-            id = dwellerId,
             energia = 4,
             agua = 5,
             comida = 6
@@ -84,51 +90,51 @@ public class NetworkManager : MonoBehaviour
         yield return StartCoroutine(UpdateDweller(dweller));
     }
     
-        IEnumerator GetRequest(string uri)
+    IEnumerator GetRequest(string uri)
+    {
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
         {
-            using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
+            // Request and wait for the desired page.
+            yield return webRequest.SendWebRequest();
+    
+            string[] pages = uri.Split('/');
+            int page = pages.Length - 1;
+    
+            switch (webRequest.result)
             {
-                // Request and wait for the desired page.
-                yield return webRequest.SendWebRequest();
-    
-                string[] pages = uri.Split('/');
-                int page = pages.Length - 1;
-    
-                switch (webRequest.result)
-                {
-                    case UnityWebRequest.Result.ConnectionError:
-                    case UnityWebRequest.Result.DataProcessingError:
-                        Debug.LogError(pages[page] + ": Error: " + webRequest.error);
-                        break;
-                    case UnityWebRequest.Result.ProtocolError:
-                        Debug.LogError(pages[page] + ": HTTP Error: " + webRequest.error);
-                        break;
-                    case UnityWebRequest.Result.Success:
-                        Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
-                        break;
-                }
+                case UnityWebRequest.Result.ConnectionError:
+                case UnityWebRequest.Result.DataProcessingError:
+                    Debug.LogError(pages[page] + ": Error: " + webRequest.error);
+                    break;
+                case UnityWebRequest.Result.ProtocolError:
+                    Debug.LogError(pages[page] + ": HTTP Error: " + webRequest.error);
+                    break;
+                case UnityWebRequest.Result.Success:
+                    Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
+                    break;
             }
         }
+    }
     
-        IEnumerator CreateDweller()
+    IEnumerator CreateDweller()
+    {
+        using (UnityWebRequest www = UnityWebRequest.Post(ip + ":" + port + "/api/vaultdweller/create", "{\"name\": \"El Ivan\", \"gender\": \"Masculino\", \"life\": 1, \"level\": 9, \"strength\": 1, \"perception\": 5, \"endurance\": 2, \"charisma\": 7, \"inteligence\": 9, \"agility\": 4, \"luck\": 4}", "application/json"))
         {
-            using (UnityWebRequest www = UnityWebRequest.Post(ip + ":" + port + "/api/vaultdweller/create", "{\"name\": \"El Ivan\", \"gender\": \"Masculino\", \"life\": 1, \"level\": 9, \"strength\": 1, \"perception\": 5, \"endurance\": 2, \"charisma\": 7, \"inteligence\": 9, \"agility\": 4, \"luck\": 4}", "application/json"))
-            {
-                yield return www.SendWebRequest();
+            yield return www.SendWebRequest();
     
-                if (www.result != UnityWebRequest.Result.Success)
-                {
-                    Debug.LogError(www.error);
-                }
-                else
-                {
-                    Debug.Log("Form upload complete!");
-                }
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError(www.error);
             }
+            else
+            {
+                Debug.Log("Form upload complete!");
+            }
+        }
     }
     IEnumerator GetDweller(int dwellerId)
     {
-        string uri = ip + ":" + port + "/api/vaultdweller/getDweller";
+        string uri = ip + ":" + port + "/api/vaultdweller/getDatos";
         using (UnityWebRequest webRequest = UnityWebRequest.Post(uri, "{\"id\": " + dwellerId + "}", "application/json"))
         {
             yield return webRequest.SendWebRequest();
@@ -143,12 +149,16 @@ public class NetworkManager : MonoBehaviour
                 // Parse the JSON response
                 VaultDweller dweller = JsonUtility.FromJson<VaultDweller>(webRequest.downloadHandler.text);
                 // Now you can use the dweller object
+
+                resourceOnline[0] = dweller.energia;
+                resourceOnline[1] = dweller.agua;
+                resourceOnline[2] = dweller.comida;
             }
         }
     }
     IEnumerator UpdateDweller(VaultDweller dweller)
     {
-        string uri = ip + ":" + port + "/api/vaultdweller/updateDatos";
+        string uri = ip + ":" + port + "/api/vaultdweller/setDatos";
         string jsonData = JsonUtility.ToJson(dweller);
     
         using (UnityWebRequest webRequest = UnityWebRequest.Put(uri, jsonData))
@@ -165,6 +175,71 @@ public class NetworkManager : MonoBehaviour
                 Debug.Log("Update complete!");
             }
         }
+    }
+
+    public void Get()
+    {
+        int dwellerId = 1; // ID del dweller que quieres obtener y actualizar
+        GetDweller(dwellerId);
+
+
+        VaultDweller dweller = new VaultDweller
+        {
+            energia = 4,
+            agua = 5,
+            comida = 6
+        };
+
+        UpdateDweller(dweller);
+    }
+
+
+    public void send()
+    {
+        int dwellerId = 1; // ID del dweller que quieres obtener y actualizar
+        GetDweller(dwellerId);
+
+        switch (index)
+        {
+            case 0:
+                VaultDweller dweller = new VaultDweller
+                {
+                    energia = resourceOnline[0] += 5,
+                    agua = resourceOnline[0],
+                    comida = resourceOnline[0]
+                };
+                UpdateDweller(dweller);
+            break;
+            case 1:
+                VaultDweller dweller1 = new VaultDweller
+                {
+                    energia = resourceOnline[0],
+                    agua = resourceOnline[0] += 5,
+                    comida = resourceOnline[0]
+                };
+                UpdateDweller(dweller1);
+                break;
+            case 2:
+                VaultDweller dweller2 = new VaultDweller
+                {
+                    energia = resourceOnline[0],
+                    agua = resourceOnline[0],
+                    comida = resourceOnline[0] += 5
+                };
+                UpdateDweller(dweller2);
+                break;
+        }
+
+    }
+
+    public void next()
+    {
+
+    }
+
+    public void prev()
+    {
+
     }
 }
 [System.Serializable]
