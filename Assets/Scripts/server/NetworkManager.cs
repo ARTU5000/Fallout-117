@@ -15,7 +15,7 @@ public class NetworkManager : MonoBehaviour
 
 
     public GameObject[] resourceImage = new GameObject[3];
-    int index;
+    [SerializeField] int index;
 
     //public TextMeshProUGUI Pointer;
     private string rute;
@@ -60,8 +60,9 @@ public class NetworkManager : MonoBehaviour
     void Start()
     {
         index = 0;
+        imagen();
         // A correct website page.
-        StartCoroutine(GetRequest(ip + ":" + port));
+        //StartCoroutine(GetRequest(ip + ":" + port));
         /*
         // A non-existing page.
         StartCoroutine(GetRequest("https://error.html"));
@@ -70,7 +71,7 @@ public class NetworkManager : MonoBehaviour
         StartCoroutine(CreateDweller());
     
         StartCoroutine(CreateDweller());*/
-        StartCoroutine(ManageDweller());
+        //StartCoroutine(ManageDweller());
         //GetDweller();
     }
     
@@ -182,66 +183,89 @@ public class NetworkManager : MonoBehaviour
         int dwellerId = 1; // ID del dweller que quieres obtener y actualizar
         GetDweller(dwellerId);
 
-
-        VaultDweller dweller = new VaultDweller
+        if (resourceOnline[index] >= 5)
         {
-            energia = 4,
-            agua = 5,
-            comida = 6
-        };
+            resourceOnline[index] -= 5;
 
-        UpdateDweller(dweller);
+            VaultDweller dweller = new VaultDweller
+            {
+                energia = resourceOnline[0],
+                agua = resourceOnline[1],
+                comida = resourceOnline[2]
+            };
+            UpdateDweller(dweller);
+
+            Load();
+            resource[index] += 5;
+            Save();
+        }
     }
-
 
     public void send()
     {
         int dwellerId = 1; // ID del dweller que quieres obtener y actualizar
         GetDweller(dwellerId);
 
-        switch (index)
+        if (resource[index] >= 5)
         {
-            case 0:
-                VaultDweller dweller = new VaultDweller
-                {
-                    energia = resourceOnline[0] += 5,
-                    agua = resourceOnline[0],
-                    comida = resourceOnline[0]
-                };
-                UpdateDweller(dweller);
-            break;
-            case 1:
-                VaultDweller dweller1 = new VaultDweller
-                {
-                    energia = resourceOnline[0],
-                    agua = resourceOnline[0] += 5,
-                    comida = resourceOnline[0]
-                };
-                UpdateDweller(dweller1);
-                break;
-            case 2:
-                VaultDweller dweller2 = new VaultDweller
-                {
-                    energia = resourceOnline[0],
-                    agua = resourceOnline[0],
-                    comida = resourceOnline[0] += 5
-                };
-                UpdateDweller(dweller2);
-                break;
-        }
+            resourceOnline[index] += 5;
 
+            VaultDweller dweller = new VaultDweller
+            {
+                energia = resourceOnline[0],
+                agua = resourceOnline[1],
+                comida = resourceOnline[2]
+            };
+            UpdateDweller(dweller);
+
+            Load();
+            resource[index] -= 5;
+            Save();
+        }
     }
 
     public void next()
     {
-
+        if (index < 2)
+        {
+            index++;
+        }
+        else if (index >= 2)
+        {
+            index = 0;
+        }
+        imagen();
     }
 
     public void prev()
     {
+        if (index > 0)
+        {
+            index--;
+        }
+        else if (index >= 0)
+        {
+            index = 2;
+        }
+        imagen();
+    }
 
+    void imagen()
+    {
+        for(int i=0; i < resourceImage.Length; i++)
+        {
+            if (i == index)
+            {
+                resourceImage[i].SetActive(true);
+            }
+            else
+            {
+                resourceImage[i].SetActive(false);
+            }
+        }
     }
 }
+
 [System.Serializable]
 public class VaultDweller
 {
