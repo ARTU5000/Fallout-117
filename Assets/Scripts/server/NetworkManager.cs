@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using TMPro;
 using UnityEngine;
@@ -90,7 +91,6 @@ public class NetworkManager : MonoBehaviour
     
         yield return StartCoroutine(UpdateDweller(dweller));
     }
-    
     IEnumerator GetRequest(string uri)
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
@@ -104,19 +104,20 @@ public class NetworkManager : MonoBehaviour
             switch (webRequest.result)
             {
                 case UnityWebRequest.Result.ConnectionError:
+                    UnityEngine.Debug.Log("No hay conexion");
+                    break;
                 case UnityWebRequest.Result.DataProcessingError:
-                    Debug.LogError(pages[page] + ": Error: " + webRequest.error);
+                    UnityEngine.Debug.LogError(pages[page] + ": Error: " + webRequest.error);
                     break;
                 case UnityWebRequest.Result.ProtocolError:
-                    Debug.LogError(pages[page] + ": HTTP Error: " + webRequest.error);
+                    UnityEngine.Debug.LogError(pages[page] + ": HTTP Error: " + webRequest.error);
                     break;
                 case UnityWebRequest.Result.Success:
-                    Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
+                    UnityEngine.Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
                     break;
             }
         }
     }
-    
     IEnumerator CreateDweller()
     {
         using (UnityWebRequest www = UnityWebRequest.Post(ip + ":" + port + "/api/vaultdweller/create", "{\"name\": \"El Ivan\", \"gender\": \"Masculino\", \"life\": 1, \"level\": 9, \"strength\": 1, \"perception\": 5, \"endurance\": 2, \"charisma\": 7, \"inteligence\": 9, \"agility\": 4, \"luck\": 4}", "application/json"))
@@ -125,11 +126,11 @@ public class NetworkManager : MonoBehaviour
     
             if (www.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogError(www.error);
+                UnityEngine.Debug.LogError(www.error);
             }
             else
             {
-                Debug.Log("Form upload complete!");
+                UnityEngine.Debug.Log("Form upload complete!");
             }
         }
     }
@@ -142,11 +143,11 @@ public class NetworkManager : MonoBehaviour
 
             if (webRequest.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogError("Error: " + webRequest.error);
+                UnityEngine.Debug.LogError("Error: " + webRequest.error);
             }
             else
             {
-                Debug.Log("Received: " + webRequest.downloadHandler.text);
+                UnityEngine.Debug.Log("Received: " + webRequest.downloadHandler.text);
                 // Parse the JSON response
                 VaultDweller dweller = JsonUtility.FromJson<VaultDweller>(webRequest.downloadHandler.text);
                 // Now you can use the dweller object
@@ -169,11 +170,11 @@ public class NetworkManager : MonoBehaviour
     
             if (webRequest.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogError("Error: " + webRequest.error);
+                UnityEngine.Debug.LogError("Error: " + webRequest.error);
             }
             else
             {
-                Debug.Log("Update complete!");
+                UnityEngine.Debug.Log("Update complete!");
             }
         }
     }
@@ -263,6 +264,11 @@ public class NetworkManager : MonoBehaviour
                 resourceImage[i].SetActive(false);
             }
         }
+    }
+
+    public void button()
+    {
+        GetRequest(ip + ":" + port);
     }
 }
 

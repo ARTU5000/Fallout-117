@@ -78,7 +78,7 @@ public class PlayerController : MonoBehaviour
     {
         UpdateMovement();
         UpdateMouseLook();
-        jump();
+        //jump();
     }
     
     private void OnCollisionEnter(Collision other)
