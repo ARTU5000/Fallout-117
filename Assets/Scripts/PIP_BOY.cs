@@ -25,30 +25,30 @@ public class PIP_BOY : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.P)) 
+        if (Input.GetKeyDown(KeyCode.P))
         {
             vaultboy.SetActive(true);
             items.SetActive(false);
             map.SetActive(false);
             online.SetActive(false);
             onOff = !onOff;
+
+            if (onOff)
+            {
+                PC.enabled = false;
+                CC.enabled = false;
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+            }
+            else
+            {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+                PC.enabled = true;
+                CC.enabled = true;
+            }
         }
         pipboy.SetActive(onOff);
-
-        if (onOff)
-        {
-            PC.enabled = false;
-            CC.enabled = false;
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-        }
-        else
-        {
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
-            PC.enabled = true;
-            CC.enabled = true;
-        }
     }
 
     public void Items()

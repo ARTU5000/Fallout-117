@@ -25,12 +25,25 @@ public class terminales : MonoBehaviour
     {
         if (inTriggerZone && Input.GetKeyDown(KeyCode.E))
         {
-            Load();
-            int randomIndex = UnityEngine.Random.Range(0, resource.Length);
-            resource[randomIndex]++;
+            Load(); 
+
+            int minIndex = 0;
+            int minValue = resource[0];
+
+            for (int i = 1; i < resource.Length; i++)
+            {
+                if (resource[i] < minValue)
+                {
+                    minValue = resource[i];
+                    minIndex = i;
+                }
+            }
+
+            resource[minIndex]++;
+
             Save();
             infoText.text = "Simplemente funciona";
-            StartCoroutine(DisableTriggerForTwoMinutes());
+            StartCoroutine(DisableTrigger());
         }
     }
 
@@ -52,12 +65,12 @@ public class terminales : MonoBehaviour
         }
     }
 
-    IEnumerator DisableTriggerForTwoMinutes()
+    IEnumerator DisableTrigger()
     {
         triggerCollider.enabled = false;
-        yield return new WaitForSeconds(5); // 5 segundos
+        yield return new WaitForSeconds(5);
         infoText.text = "";
-        yield return new WaitForSeconds(120); // 120 segundos = 2 minutos
+        yield return new WaitForSeconds(30); 
         triggerCollider.enabled = true;
     }
 

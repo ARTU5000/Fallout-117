@@ -8,14 +8,16 @@ using System.IO;
 public class ResourceReducer : MonoBehaviour
 {
     [SerializeField]int[] resource = new int[3]; //0 = energia, 1 = agua, 2 = comida
-    public TextMeshProUGUI Pointer;
+    //public TextMeshProUGUI Pointer;
     private string rute;
     private SaveResources SaveP;
 
-    private float minuteTimer = 0f;
-    private float secondTimer = 0f;
-    private const float minuteInterval = 60f;
-    private const float secondInterval = 20f;
+    private float ATimer = 0f;
+    private float BTimer = 0f;
+    private float CTimer = 0f;
+    private const float AInterval = 300f;
+    private const float BInterval = 150f;
+    private const float CInterval = 30f;
 
     void Start()
     {
@@ -24,22 +26,29 @@ public class ResourceReducer : MonoBehaviour
 
     void Update()
     {
-        minuteTimer += Time.deltaTime;
-        secondTimer += Time.deltaTime;
+        ATimer += Time.deltaTime;
+        BTimer += Time.deltaTime;
+        CTimer += Time.deltaTime;
 
-        if (minuteTimer >= minuteInterval)
+        if (ATimer >= AInterval)
         {
             ReduceResources();
-            minuteTimer = 0f;
+            ATimer = 0f;
         }
 
-        if (secondTimer >= secondInterval)
+        if (BTimer >= BInterval)
         {
             ReduceRandomResource();
-            secondTimer = 0f;
+            BTimer = 0f;
         }
 
-        Pointer.text = "Energia: " + resource[0].ToString() + "\n Agua: " + resource[1].ToString() + "\n Comida: " + resource[2].ToString();
+        if (CTimer >= CInterval)
+        {
+            MaxReducer();
+            CTimer = 0f;
+        }
+
+        //Pointer.text = "Energia: " + resource[0].ToString() + "\n Agua: " + resource[1].ToString() + "\n Comida: " + resource[2].ToString();
     }
 
     void ReduceResources()
@@ -57,6 +66,25 @@ public class ResourceReducer : MonoBehaviour
         Load();
         int randomIndex = Random.Range(0, resource.Length);
         resource[randomIndex] --;
+        Save();
+    }
+
+    void MaxReducer()
+    {
+        Load();
+        int maxIndex = 0;
+        int maxValue = resource[0];
+
+        for (int i = 1; i < resource.Length; i++)
+        {
+            if (resource[i] > maxValue)
+            {
+                maxValue = resource[i];
+                maxIndex = i;
+            }
+        }
+
+        resource[maxIndex]--;
         Save();
     }
 
