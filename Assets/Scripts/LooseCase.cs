@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LooseCase : MonoBehaviour
 {
@@ -26,10 +27,22 @@ public class LooseCase : MonoBehaviour
             {
                 luse.SetActive(true);
                 Time.timeScale = 0f;
+                StartCoroutine(End());
             }
 
         }
 
+    }
+    IEnumerator End()
+    {
+        yield return new WaitForSecondsRealtime(5);
+        resource[0] = 0;
+        resource[1] = 0;
+        resource[2] = 0;
+        Save();
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("FinalB");
+        Time.timeScale = 1f;
     }
 
     public void Save()

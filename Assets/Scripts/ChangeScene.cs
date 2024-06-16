@@ -57,6 +57,10 @@ public class ChangeScene : MonoBehaviour
 
     public void finalb()
     {
+        resource[0] = 0;
+        resource[1] = 0;
+        resource[2] = 0;
+        Save();
         Time.timeScale = 1f;
         SceneManager.LoadScene("FinalB");
         Time.timeScale = 1f;

@@ -249,14 +249,14 @@ MonoBehaviour:
   - {fileID: 65971081}
   - {fileID: 751170978}
   audios:
-  - {fileID: 8300000, guid: d5159f31acbe8b8458ca8b0472e048c0, type: 3}
-  - {fileID: 8300000, guid: d5159f31acbe8b8458ca8b0472e048c0, type: 3}
-  - {fileID: 8300000, guid: d5159f31acbe8b8458ca8b0472e048c0, type: 3}
-  - {fileID: 8300000, guid: d5159f31acbe8b8458ca8b0472e048c0, type: 3}
-  - {fileID: 8300000, guid: d5159f31acbe8b8458ca8b0472e048c0, type: 3}
-  - {fileID: 8300000, guid: d5159f31acbe8b8458ca8b0472e048c0, type: 3}
-  - {fileID: 8300000, guid: d5159f31acbe8b8458ca8b0472e048c0, type: 3}
-  - {fileID: 8300000, guid: d5159f31acbe8b8458ca8b0472e048c0, type: 3}
+  - {fileID: 8300000, guid: 6e333a62cf2bf6b4a8f7a62e024abbac, type: 3}
+  - {fileID: 8300000, guid: 55dbaf33e0567c7429713294a2b3dd48, type: 3}
+  - {fileID: 8300000, guid: 30cc028bd1b853b4d9bf68d083958c02, type: 3}
+  - {fileID: 8300000, guid: 75966f2e7e1be634f9595312cff93e7e, type: 3}
+  - {fileID: 8300000, guid: 5a2419d725b80a541b5ce06d435766db, type: 3}
+  - {fileID: 8300000, guid: e08855ef1eb0a074287d0d6a4cf7a697, type: 3}
+  - {fileID: 8300000, guid: 5dea227f4833b0547bdad06f86e68b5f, type: 3}
+  - {fileID: 8300000, guid: ca1958fde2303ab4cac9de5418bc0345, type: 3}
   nextSceneName: Juego
 --- !u!1 &65971079
 GameObject:
