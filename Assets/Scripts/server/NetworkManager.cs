@@ -182,7 +182,7 @@ public class NetworkManager : MonoBehaviour
     public void Get()
     {
         int dwellerId = 1; // ID del dweller que quieres obtener y actualizar
-        GetDweller(dwellerId);
+        StartCoroutine(GetDweller(dwellerId));
 
         if (resourceOnline[index] >= 5)
         {
@@ -194,7 +194,7 @@ public class NetworkManager : MonoBehaviour
                 agua = resourceOnline[1],
                 comida = resourceOnline[2]
             };
-            UpdateDweller(dweller);
+            StartCoroutine(UpdateDweller(dweller));
 
             Load();
             resource[index] += 5;
@@ -205,7 +205,7 @@ public class NetworkManager : MonoBehaviour
     public void send()
     {
         int dwellerId = 1; // ID del dweller que quieres obtener y actualizar
-        GetDweller(dwellerId);
+        StartCoroutine(GetDweller(dwellerId));
 
         if (resource[index] >= 5)
         {
@@ -217,7 +217,7 @@ public class NetworkManager : MonoBehaviour
                 agua = resourceOnline[1],
                 comida = resourceOnline[2]
             };
-            UpdateDweller(dweller);
+            StartCoroutine(UpdateDweller(dweller));
 
             Load();
             resource[index] -= 5;
