@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -45,6 +46,8 @@ public class NetworkManager : MonoBehaviour
             rute = Application.streamingAssetsPath + "/Resources.json";
             string json = System.IO.File.ReadAllText(rute);
             SaveP = JsonUtility.FromJson<SaveResources>(json);
+
+            UnityEngine.Debug.Log("mis datos: " + json);
 
             resource[0] = SaveP.NRG;
             resource[1] = SaveP.WTR;
@@ -149,12 +152,24 @@ public class NetworkManager : MonoBehaviour
             {
                 UnityEngine.Debug.Log("Received: " + webRequest.downloadHandler.text);
                 // Parse the JSON response
-                VaultDweller dweller = JsonUtility.FromJson<VaultDweller>(webRequest.downloadHandler.text);
-                // Now you can use the dweller object
+                string info = webRequest.downloadHandler.text;
 
+                int indice1 = info.IndexOf("[") + "[".Length;
+                // Obtenemos la posición del &usrg=
+                int indice2 = info.IndexOf("]");
+                // Restamos los índices para saber cuantos caracteres tenemos que coger
+                int caracteres = indice2 - indice1;
+                // Finalmente hacemos un substring del primer índice, cogiendo el número de caracteres necesarios. 
+                string info2 = info.Substring(indice1, caracteres);
+
+                VaultDweller dweller = JsonUtility.FromJson<VaultDweller>(info2);
+                // Now you can use the dweller object
                 resourceOnline[0] = dweller.energia;
                 resourceOnline[1] = dweller.agua;
                 resourceOnline[2] = dweller.comida;
+
+                UnityEngine.Debug.Log(dweller.energia);
+                UnityEngine.Debug.Log(info2);
             }
         }
     }
@@ -207,6 +222,7 @@ public class NetworkManager : MonoBehaviour
         int dwellerId = 1; // ID del dweller que quieres obtener y actualizar
         StartCoroutine(GetDweller(dwellerId));
 
+        Load();
         if (resource[index] >= 5)
         {
             resourceOnline[index] += 5;
