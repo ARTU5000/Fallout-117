@@ -8,7 +8,9 @@ public class opendoor : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        anim = GetComponentInChildren<Animator>();
+        if (anim == null)
+            anim = GetComponentInChildren<Animator>();
+
         anim.SetBool("open", false);
     }
 
