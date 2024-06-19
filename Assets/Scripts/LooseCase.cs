@@ -21,6 +21,7 @@ public class LooseCase : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Load();
         foreach (int item in resource)
         {
             if (item < -20) 
